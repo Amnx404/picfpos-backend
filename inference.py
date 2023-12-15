@@ -57,14 +57,24 @@ def load_resnet101():
     criterion = nn.CrossEntropyLoss()
     return model_resnet101, optimizer, criterion
 
+from transformers import ViTForImageClassification, ViTFeatureExtractor
+
+def load_transformer():
+    # Define the transformer model
+    model = ViTForImageClassification.from_pretrained('google/vit-base-patch16-224-in21k', num_labels=27)
+    model.to(device)
+
+    return model
+
 from PIL import Image
 import torchvision.transforms as transforms
 
-chosen_model = load_resnet101()[0]
+chosen_model = load_resnet50_finetuned()[0]
 #load from state dict
-chosen_model.load_state_dict(torch.load('./models/FC_Res101_simple/epoch_8.pth', map_location=torch.device('cpu')))
+chosen_model.load_state_dict(torch.load('./models/Custom_res50_simple_epoch_9.pth', map_location=torch.device('cpu')))
 
-
+chosen_modelT=  load_transformer()
+chosen_modelT.load_state_dict(torch.load('./models/vit_model.pth', map_location=torch.device('cpu')))
 def do_inference(image):
     # Function to preprocess the image
     def preprocess_image(image_path):
@@ -101,3 +111,8 @@ def do_inference(image):
     return p
 
 
+from PIL import Image
+import torchvision.transforms as transforms
+
+def do_inference2(image):
+    

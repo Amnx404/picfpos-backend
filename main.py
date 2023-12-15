@@ -61,6 +61,9 @@ async def shutdown():
 
 # Other imports and setup...
 
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
 
 THRESHOLD = 15  # Adjust this threshold as needed
 
